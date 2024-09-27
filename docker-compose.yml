@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:latest
+    env_file:
+      - ./.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+
+  web:
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - static_volume:/app/src/static/
+      - media_volume:/app/src/media/
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./deploy/nginx/Dockerfile.nginx
+    command: nginx -g 'daemon off;'
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    volumes:
+      - static_volume:/app/src/static/
+      - media_volume:/app/src/media/
+
+volumes:
+  pg_data:
+  static_volume:
+  media_volume:

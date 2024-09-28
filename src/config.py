@@ -5,7 +5,7 @@ from pydantic import BaseSettings, root_validator
 
 class Settings(BaseSettings):
     DEBUG: bool = True
-
+    ALLOWED_ORIGINS: str = 'http://localhost, http://localhost:8000, http://localhost:3000, http://localhost:5137'
     API_V1_STR: str = "/api/v1"
 
     POSTGRES_USER: str
